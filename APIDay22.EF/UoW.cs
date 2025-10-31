@@ -12,14 +12,14 @@ namespace APIDay22.EF
     public class UoW : IUoW
     {
         private readonly ApplicationDbContext _context;
-        public IBaseRepository<Student> Students { get; }
-        public IBaseRepository<Department> Departments { get; }
+        public IBaseRepository<Student> Students { get; private set; }
+        public IDepartmentRepository Departments { get; private set; }
 
         public UoW(ApplicationDbContext context)
         {
             _context = context;
             Students = new BaseRepository<Student>(_context);
-            Departments = new BaseRepository<Department>(_context);
+            Departments = new DepartmentRepository(_context);
         }
 
         public int Complete() => _context.SaveChanges();

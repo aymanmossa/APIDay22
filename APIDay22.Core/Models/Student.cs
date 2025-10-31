@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace APIDay22.Core.Models
@@ -31,5 +33,11 @@ namespace APIDay22.Core.Models
         [Required(ErrorMessage = "Gender is required")]
         [RegularExpression("[MF]", ErrorMessage = "Gender must be either 'M' or 'F'")]
         public string Gender { get; set; } = "";
+
+        [ForeignKey(nameof(Department))]
+        public int? DeptId { get; set; }
+        [JsonIgnore]
+        public Department? Department { get; set; }
+
     }
 }

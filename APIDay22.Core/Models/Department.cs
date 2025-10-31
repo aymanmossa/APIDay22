@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace APIDay22.Core.Models
@@ -13,18 +14,22 @@ namespace APIDay22.Core.Models
         [Key]
         public int DeptId { get; set; }
 
-        // Name => Custom Validation [Unique]
-        [Required, StringLength(100)]
-        [UniqueDepartmentName] // checks DB for duplicates
+        [Required(ErrorMessage = "Name is required")]
+        [StringLength(100, ErrorMessage = "Name cannot be longer than 100 characters")]
+        [UniqueDepartmentName] 
         public string Name { get; set; } = string.Empty;
 
-        // Manger => [ONLY Letters]
-        [Required, StringLength(100)]
+        [Required(ErrorMessage = "Manger is required")]
+        [StringLength(100, ErrorMessage = "Manger cannot be longer than 100 characters")]
         [OnlyLettersAttributes] // allows letters + spaces only
         public string Manger { get; set; } = string.Empty;
 
-        // Location => validated via Action Filter (see below)
-        [Required, StringLength(50)]
+        
+        [Required(ErrorMessage = "Location is required")]
+        [StringLength(50, ErrorMessage = "Location cannot be longer than 50 characters")]
         public string Location { get; set; } = string.Empty;
+
+        [JsonIgnore]
+        public ICollection<Student> Students { get; set; } = new List<Student>();
     }
 }

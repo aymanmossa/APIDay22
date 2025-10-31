@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace APIDay22.Core.Interfaces
 {
-    public interface IUoW : IDisposable
+    public interface IDepartmentRepository : IBaseRepository<Department>
     {
-        IBaseRepository<Student> Students { get; }
-        IDepartmentRepository Departments { get; }
-
-        int Complete();
+        IEnumerable<Department> GetDepartmentsWithStudents();
     }
 }

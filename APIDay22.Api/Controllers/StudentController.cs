@@ -1,4 +1,5 @@
-﻿using APIDay22.Core.Interfaces;
+﻿using APIDay22.Core.DTOs;
+using APIDay22.Core.Interfaces;
 using APIDay22.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ namespace APIDay22.Api.Controllers
         {
             _uow = uow;
         }
+        //------------------------------------------
 
         [HttpGet]
         public IActionResult GetAllStudents()
@@ -21,6 +23,26 @@ namespace APIDay22.Api.Controllers
             var students = _uow.Students.GetAll();
             return Ok(new { Students = students, Message = "All Students Found" });
         }
+        //------------------------------------------
+
+        [HttpGet("GetStudentDetaails")]
+        public IActionResult GetStudentDeatails()
+        {
+            var students = _uow.Students.GetAll();
+
+            var result = students.Select(s => new  StudentDetailsDto
+            {
+                Name = s.Name,
+                Dept = s.Department?.Name ?? "N/A",
+                Manager = s.Department?.Manger ?? "N/A",
+                Address = s.Address ?? "N/A",
+                Date = DateTime.Now
+            }).ToList();
+
+            return Ok(result);
+        }
+
+        //-------------------------------------------
 
         [HttpGet("{ssn:int}")]
         public IActionResult GetStudentBySsn(int ssn)
@@ -32,6 +54,8 @@ namespace APIDay22.Api.Controllers
             return Ok(new { Student = student, Message = $"Student {student.Name}" });
         }
 
+        //-------------------------------------------   
+
         [HttpGet("name/{name:alpha}")]
         public IActionResult GetStudentByName(string name)
         {
@@ -41,6 +65,8 @@ namespace APIDay22.Api.Controllers
 
             return Ok(new { Student = student, Message = $"Student {student.Name}" });
         }
+
+        //-------------------------------------------
 
         [HttpPost]
         public IActionResult AddStudent([FromBody] Student student)
@@ -55,7 +81,9 @@ namespace APIDay22.Api.Controllers
                 new { Message = "Student Added Successfully", Student = student });
         }
 
-        [HttpPut("{ssn: int}")]
+        //-------------------------------------------
+
+        [HttpPut("{ssn:int}")]
         public IActionResult EditStudent(int ssn, [FromBody] Student updatedStudent)
         {
             if (!ModelState.IsValid)
@@ -76,6 +104,9 @@ namespace APIDay22.Api.Controllers
 
             return Ok( new { Message = "Student Updated Successfully", Student = student });
         }
+
+        //-------------------------------------------
+
 
         [HttpDelete("{ssn:int}")]
         public IActionResult DeleteStudent(int ssn)
